@@ -1,0 +1,10 @@
+body { font-family: 'Cairo', sans-serif; }
+        /* Custom Scrollbar for the table */
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+        
+        /* Table styles to match dark mode cleanly */
+        .excel-table th, .excel-table td { border-bottom-width: 1px; }
+        .excel-table tr:last-child td { border-bottom-width: 0; }

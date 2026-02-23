@@ -25,18 +25,8 @@
     <!-- html2pdf.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <style>
-        body { font-family: 'Cairo', sans-serif; }
-        /* Custom Scrollbar for the table */
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
-        
-        /* Table styles to match dark mode cleanly */
-        .excel-table th, .excel-table td { border-bottom-width: 1px; }
-        .excel-table tr:last-child td { border-bottom-width: 0; }
-    </style>
+    <link rel='stylesheet' href='styles.css'>
+
 </head>
 <body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 transition-colors duration-200 min-h-screen p-4 md:p-8">
     <div class="max-w-7xl mx-auto space-y-6">
