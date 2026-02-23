@@ -32,37 +32,38 @@
     <div class="max-w-7xl mx-auto space-y-6">
         
         <!-- Header -->
-        <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
-            <div class="flex items-center justify-between gap-4">
+        <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 md:p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
                 <!-- Iconic Logo -->
-                <div class="flex-shrink-0">
-                    <img src="iconic-logo.png" alt="Iconic" class="h-28 md:h-28 object-contain" onerror="this.style.display='none'">
+                <div class="flex-shrink-0 order-2 md:order-1">
+                    <img src="iconic-logo.png" alt="Iconic" class="h-20 sm:h-24 md:h-28 object-contain" onerror="this.style.display='none'">
                 </div>  
                 
                 <!-- Center Title -->
-                <div class="flex flex-col items-center gap-2 flex-1">
-                    <h1 class="text-xl md:text-2xl font-bold text-purple-800 dark:text-purple-400 flex items-center gap-2">
+                <div class="flex flex-col items-center gap-2 flex-1 order-1 md:order-2 w-full">
+                    <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-purple-800 dark:text-purple-400 flex items-center justify-center gap-2 text-center">
                         <i class="ph-fill ph-calculator text-2xl md:text-3xl"></i>
                         <span data-i18n="appTitle">حاسبة Grossing Up</span>
                     </h1>
+                    <div class="h-1 w-20 bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent rounded-full mt-1"></div>
                 </div>
                 
                 <!-- NPI Logo -->
-                <div class="flex-shrink-0">
-                    <img src="npi-logo.png" alt="NPI" class="h-28 md:h-28 object-contain" onerror="this.style.display='none'">
+                <div class="flex-shrink-0 order-3">
+                    <img src="npi-logo.png" alt="NPI" class="h-20 sm:h-24 md:h-28 object-contain" onerror="this.style.display='none'">
                 </div>
             </div>
         </div>
 
         <!-- Fixed Floating Sidebar Toggle -->
-        <div id="floatingControls" class="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2 p-2 rounded-2xl bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-gray-200/60 dark:border-slate-700/60 shadow-lg shadow-purple-100/30 dark:shadow-black/20 transition-all duration-300 hover:shadow-xl hover:shadow-purple-200/40 dark:hover:shadow-purple-900/20 hover:scale-105">
+        <div id="floatingControls" class="fixed right-4 bottom-4 md:right-auto md:left-4 md:top-1/2 md:-translate-y-1/2 z-50 flex flex-row md:flex-col gap-2 p-2 rounded-2xl bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-gray-200/60 dark:border-slate-700/60 shadow-lg shadow-purple-100/30 dark:shadow-black/20 transition-all duration-300 hover:shadow-xl hover:shadow-purple-200/40 dark:hover:shadow-purple-900/20 hover:scale-105">
             <!-- Language Toggle -->
             <button id="langToggle" class="group relative p-3 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-slate-700 dark:to-slate-600 text-purple-600 dark:text-purple-300 hover:from-purple-100 hover:to-indigo-100 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-200 flex flex-col items-center gap-1" title="Switch Language">
                 <i class="ph ph-translate text-xl"></i>
                 <span id="currentLangLabel" class="text-[10px] font-black tracking-wider">EN</span>
             </button>
             <!-- Divider -->
-            <div class="w-6 mx-auto border-t border-gray-200 dark:border-slate-600"></div>
+            <div class="w-px h-6 md:w-6 md:h-px mx-auto bg-gray-200 dark:border-slate-600"></div>
             <!-- Theme Toggle -->
             <button id="themeToggle" class="group relative p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-slate-700 dark:to-slate-600 text-amber-600 dark:text-amber-300 hover:from-amber-100 hover:to-orange-100 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-200 flex items-center justify-center" title="Toggle Theme">
                 <i class="ph ph-moon text-xl dark:hidden"></i>
