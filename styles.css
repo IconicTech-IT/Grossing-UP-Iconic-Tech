@@ -8,3 +8,14 @@ body { font-family: 'Cairo', sans-serif; }
         /* Table styles to match dark mode cleanly */
         .excel-table th, .excel-table td { border-bottom-width: 1px; }
         .excel-table tr:last-child td { border-bottom-width: 0; }
+
+        /* Hide number input spinners */
+        .no-spinner::-webkit-inner-spin-button,
+        .no-spinner::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .no-spinner {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
