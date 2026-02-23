@@ -718,7 +718,9 @@
             function loadAsBase64(src) {
                 return new Promise((resolve) => {
                     const img = new Image();
-                    img.crossOrigin = 'anonymous';
+                    if (window.location.protocol.startsWith('http')) {
+                        img.crossOrigin = 'anonymous';
+                    }
                     img.onload = () => {
                         try {
                             const c = document.createElement('canvas');
@@ -758,8 +760,11 @@
             if (canvas) chartImg = canvas.toDataURL('image/png');
 
             // Logos
-            const logoLHtml = preloadedLogoIconic ? `<img src="${preloadedLogoIconic}" style="height:50px;"/>` : '';
-            const logoRHtml = preloadedLogoNpi ? `<img src="${preloadedLogoNpi}" style="height:50px;"/>` : '';
+            const getAbsUrl = (path) => new URL(path, document.baseURI).href;
+            const logo1Src = preloadedLogoIconic || getAbsUrl('iconic-logo.png');
+            const logo2Src = preloadedLogoNpi || getAbsUrl('npi-logo.png');
+            const logoLHtml = `<img src="${logo1Src}" style="height:50px; object-fit:contain;"/>`;
+            const logoRHtml = `<img src="${logo2Src}" style="height:50px; object-fit:contain;"/>`;
 
             // Build row
             const row = (label, val, cur, isRed, isBold, bgColor) => `
@@ -856,7 +861,7 @@
             printWindow.onload = () => {
                 setTimeout(() => {
                     printWindow.print();
-                }, 500);
+                }, 800);
             };
         }
 
