@@ -1,2 +1,5 @@
 node_modules/
 original-logic.js
+package-lock.json
+js-code.js
+package.json
