@@ -38,7 +38,9 @@ const translations = {
         chartMartyrs: "صندوق الشهداء",
         chartAllowances: "منح وبدلات",
         downloadPdf: "تحميل PDF",
-        footerText: "مدعوم من شركة Iconic Technology بالتعاون مع مؤسّسة Nassef and Partners International"
+        footerText: "مدعوم من شركة Iconic Technology بالتعاون مع مؤسّسة Nassef and Partners International",
+        emptyError: "انت عاوز تحسب الولا حاجه ولا ايه؟",
+        emptyErrorDetails: "متنساش تدخل الصافي المستهدف وسعر الصرف! 😉"
     },
     en: {
         appTitle: "Grossing Up Calculator",
@@ -78,6 +80,8 @@ const translations = {
         chartMartyrs: "Martyrs Fund",
         chartAllowances: "Allowances",
         downloadPdf: "Download PDF",
-        footerText: "Powered by Iconic Technology Company with the Corporation of Nassef and Partners International"
+        footerText: "Powered by Iconic Technology Company with the Corporation of Nassef and Partners International",
+        emptyError: "Are you trying to calculate nothing?",
+        emptyErrorDetails: "Don't forget to enter the Target Net and Exchange Rate! 😉"
     }
 };
