@@ -1,237 +1,4 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl" class="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grossing Up Calculator - Excel Mirrored (NPI Version)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2pdf.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
-    <style>
-        body { font-family: 'Cairo', sans-serif; }
-        /* Custom Scrollbar for the table */
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
-        
-        /* Table styles to match dark mode cleanly */
-        .excel-table th, .excel-table td { border-bottom-width: 1px; }
-        .excel-table tr:last-child td { border-bottom-width: 0; }
-    </style>
-</head>
-<body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 transition-colors duration-200 min-h-screen p-4 md:p-8">
-    <div class="max-w-7xl mx-auto space-y-6">
-        
-        <!-- Header -->
-        <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
-            <div class="flex items-center justify-between gap-4">
-                <!-- Iconic Logo -->
-                <div class="flex-shrink-0">
-                    <img src="iconic-logo.png" alt="Iconic" class="h-28 md:h-28 object-contain" onerror="this.style.display='none'">
-                </div>  
-                
-                <!-- Center Title -->
-                <div class="flex flex-col items-center gap-2 flex-1">
-                    <h1 class="text-xl md:text-2xl font-bold text-purple-800 dark:text-purple-400 flex items-center gap-2">
-                        <i class="ph-fill ph-calculator text-2xl md:text-3xl"></i>
-                        <span data-i18n="appTitle">حاسبة Grossing Up</span>
-                    </h1>
-                </div>
-                
-                <!-- NPI Logo -->
-                <div class="flex-shrink-0">
-                    <img src="npi-logo.png" alt="NPI" class="h-28 md:h-28 object-contain" onerror="this.style.display='none'">
-                </div>
-            </div>
-        </div>
 
-        <!-- Fixed Floating Sidebar Toggle -->
-        <div id="floatingControls" class="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2 p-2 rounded-2xl bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-gray-200/60 dark:border-slate-700/60 shadow-lg shadow-purple-100/30 dark:shadow-black/20 transition-all duration-300 hover:shadow-xl hover:shadow-purple-200/40 dark:hover:shadow-purple-900/20 hover:scale-105">
-            <!-- Language Toggle -->
-            <button id="langToggle" class="group relative p-3 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-slate-700 dark:to-slate-600 text-purple-600 dark:text-purple-300 hover:from-purple-100 hover:to-indigo-100 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-200 flex flex-col items-center gap-1" title="Switch Language">
-                <i class="ph ph-translate text-xl"></i>
-                <span id="currentLangLabel" class="text-[10px] font-black tracking-wider">EN</span>
-            </button>
-            <!-- Divider -->
-            <div class="w-6 mx-auto border-t border-gray-200 dark:border-slate-600"></div>
-            <!-- Theme Toggle -->
-            <button id="themeToggle" class="group relative p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-slate-700 dark:to-slate-600 text-amber-600 dark:text-amber-300 hover:from-amber-100 hover:to-orange-100 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-200 flex items-center justify-center" title="Toggle Theme">
-                <i class="ph ph-moon text-xl dark:hidden"></i>
-                <i class="ph ph-sun text-xl hidden dark:block"></i>
-            </button>
-        </div>
-
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
-            
-            <!-- Inputs Form -->
-            <div class="xl:col-span-4 space-y-6">
-                <!-- Form -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
-                    
-                    <!-- Section 1: بيانات الموظف -->
-                    <div class="mb-6 pb-6 border-b border-gray-100 dark:border-slate-700">
-                        <h3 class="text-md font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                            <i class="ph-fill ph-user text-purple-600 dark:text-purple-400"></i>
-                            <span data-i18n="employeeData">بيانات الموظف</span>
-                        </h3>
-                        <div class="space-y-4">
-                            <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="employeeName">اسم الموظف</label>
-                                <input type="text" id="employeeName" value="" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors">
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="employeeType">فئة الموظف</label>
-                                <select id="taxPersona" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors">
-                                    <option value="Regular Employee" data-i18n="regularEmployee">موظف عادي</option>
-                                    <option value="PWSN Employee" data-i18n="pwsnEmployee">موظف من ذوي الهمم</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 2: البيانات التأمينية -->
-                    <div class="mb-6 pb-6 border-b border-gray-100 dark:border-slate-700">
-                        <h3 class="text-md font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                            <i class="ph-fill ph-shield-check text-purple-600 dark:text-purple-400"></i>
-                            <span data-i18n="insuranceData">البيانات التأمينية</span>
-                        </h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="insurance">التأمينات</label>
-                                <select id="insuranceStatus" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors">
-                                    <option value="insured" data-i18n="insured">مؤمن عليه</option>
-                                    <option value="not insured" data-i18n="notInsured">غير مؤمن</option>
-                                </select>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="insuranceType">النوع</label>
-                                <select id="roleType" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors">
-                                    <option value="Employee" data-i18n="employee">موظف</option>
-                                    <option value="Manager" data-i18n="manager">مدير</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 3: المعاملات الضريبية -->
-                    <div class="mb-6 pb-6 border-b border-gray-100 dark:border-slate-700">
-                        <h3 class="text-md font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                            <i class="ph-fill ph-receipt text-purple-600 dark:text-purple-400"></i>
-                            <span data-i18n="taxTreatment">المعاملات الضريبية</span>
-                        </h3>
-                        <div class="space-y-1.5">
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="type">النوع</label>
-                            <select id="taxTreatment" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors">
-                                <option value="us" data-i18n="Nesma_First_employer">جهة العمل الأصلية</option>
-                                <option value="others" data-i18n="Nesma_Second_employer">يعمل لدى الغير (10% مقطوعة)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Section 4: الأجر -->
-                    <div class="mb-6 pb-2">
-                        <h3 class="text-md font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                            <i class="ph-fill ph-wallet text-purple-600 dark:text-purple-400"></i>
-                            <span data-i18n="wage">الأجر</span>
-                        </h3>
-                        
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="targetNetUSD">الصافي المستهدف (USD)</label>
-                                <input type="number" id="targetNetUSD" value="" step="10" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors">
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="usdRate">سعر الصرف (EGP/USD)</label>
-                                <input type="number" id="usdRate" value="" step="0.001" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors">
-                            </div>
-                        </div>
-                        
-                        <!-- Hidden Inputs -->
-                        <input type="hidden" id="basicSalaryUSD" value="0" step="10">
-                        <input type="hidden" id="allowancesEGP" value="0" step="100">
-                        <input type="hidden" id="workingPeriod" value="1" step="0.1">
-                    </div>
-
-                    <div class="flex gap-3 mt-4">
-                        <button onclick="calculateGoalSeek()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md shadow-purple-200 dark:shadow-none transition-all flex justify-center items-center gap-2">
-                            <i class="ph-bold ph-calculator"></i>
-                            <span data-i18n="calculateBtn">حساب النتائج</span>
-                        </button>
-                        <button onclick="resetForm()" class="bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 font-bold py-3.5 px-5 rounded-xl transition-all flex justify-center items-center gap-2" title="تفريغ الحقول" id="resetBtn">
-                            <i class="ph-bold ph-arrow-counter-clockwise"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Output / Results -->
-            <div class="xl:col-span-8">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
-                    <div class="p-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50 flex justify-between items-center">
-                        <h2 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                            <i class="ph-fill ph-table text-purple-600 dark:text-purple-400"></i>
-                            <span data-i18n="result">النتيجة للموظف</span>
-                            <span id="resultEmployeeName" class="text-purple-600 dark:text-purple-400"></span>
-                        </h2>
-                        <button id="pdfBtn" onclick="generatePDF()" class="hidden bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold py-2 px-4 rounded-lg transition-all flex items-center gap-2 shadow-sm">
-                            <i class="ph-bold ph-file-pdf text-lg"></i>
-                            <span data-i18n="downloadPdf">تحميل PDF</span>
-                        </button>
-                    </div>
-                    
-                    <div id="resultsContainer" class="p-4 sm:p-5">
-                        <div class="text-center py-4 text-gray-400 dark:text-slate-500 flex flex-col items-center justify-center gap-2">
-                            <i class="ph-light ph-table text-4xl"></i>
-                            <span data-i18n="emptyTable" class="text-sm">أدخل البيانات واضغط "حساب النتائج"</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chart Section -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mt-6 transition-colors">
-                    <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2">
-                        <i class="ph-fill ph-chart-pie-slice text-purple-600 dark:text-purple-400"></i>
-                        <span data-i18n="salaryBreakdown">تحليل الراتب</span>
-                    </h2>
-                    <div class="relative h-80 w-full">
-                        <canvas id="salaryChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-
-        <!-- Website Footer -->
-        <div class="text-center py-4 mt-2">
-            <div class="flex items-center justify-center gap-2 mb-1">
-                <div class="h-0.5 w-8 bg-purple-300 dark:bg-purple-700 rounded"></div>
-                <i class="ph-fill ph-lightning text-purple-500 dark:text-purple-400"></i>
-                <div class="h-0.5 w-8 bg-purple-300 dark:bg-purple-700 rounded"></div>
-            </div>
-            <p class="text-xs text-gray-400 dark:text-slate-500" data-i18n="footerText">مدعوم من شركة Iconic Technology بالتعاون مع مؤسَّسة Nassef and Partners International</p>
-        </div>
-    </div>
-
-    <script>
         // Translations
         const translations = {
             ar: {
@@ -250,8 +17,8 @@
                 manager: "مدير",
                 taxTreatment: "المعاملات الضريبية",
                 type: "النوع",
-                "Nesma_First_employer": "جهة العمل الأصلية",
-                "Nesma_Second_employer": "يعمل لدى الغير (10% مقطوعة)",
+                "Nesma First employer": "جهة العمل الأصلية",
+                "Nesma Second employer": "يعمل لدى الغير (10% مقطوعة)",
                 wage: "الأجر",
                 targetNetUSD: "الصافي المستهدف (USD)",
                 usdRate: "سعر الصرف (EGP/USD)",
@@ -290,8 +57,8 @@
                 manager: "Manager",
                 taxTreatment: "Tax Treatment",
                 type: "Type",
-                "Nesma_First_employer": "Original Employer",
-                "Nesma_Second_employer": "Works for Others (10% Flat)",
+                "Nesma First employer": "Original Employer",
+                "Nesma Second employer": "Works for Others (10% Flat)",
                 wage: "Wage",
                 targetNetUSD: "Target Net (USD)",
                 usdRate: "Exchange Rate (EGP/USD)",
@@ -870,6 +637,4 @@
             preloadLogos();
             resetForm();
         });
-    </script>
-</body>
-</html>
+    
