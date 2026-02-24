@@ -235,10 +235,11 @@
                     </div>
                     
                     <div id="resultsContainer" class="p-4 sm:p-5">
-                        <div class="text-center py-4 text-gray-400 dark:text-slate-500 flex flex-col items-center justify-center gap-2">
+                        <div id="skeletonResults" class="text-center py-4 text-gray-400 dark:text-slate-500 flex flex-col items-center justify-center gap-2">
                             <i class="ph-light ph-table text-4xl"></i>
                             <span data-i18n="emptyTable" class="text-sm">أدخل البيانات واضغط "حساب النتائج"</span>
                         </div>
+                        <div id="tableContent" class="hidden"></div>
                     </div>
                 </div>
 
@@ -304,79 +305,6 @@
             });
         })();
 
-        // Security & Validation Logic with Fun Popup
-        (function() {
-            const ACCESS_KEY_HASH = "MTIz"; // Base64 of "123"
-            const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000;
-
-            window.showFunPopup = function(title, message, btnText, isSecurity) {
-                const popup = document.createElement('div');
-                popup.className = 'fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/10 backdrop-blur-[2px] animate-in fade-in duration-300';
-                popup.innerHTML = `
-                    <div class="glass-popup p-1 rounded-[2.5rem] transform animate-in zoom-in-95 duration-300 shadow-2xl">
-                        <div class="bg-white dark:bg-slate-800 p-8 rounded-[2.4rem] text-center max-w-sm shake">
-                            <div class="w-16 h-16 ${isSecurity ? 'bg-red-100 dark:bg-red-900/30' : 'bg-purple-100 dark:bg-purple-900/30'} rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="ph-fill ${isSecurity ? 'ph-warning-octagon text-red-500' : 'ph-warning-circle text-purple-500'} text-3xl"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">${title}</h4>
-                            <p class="text-gray-500 dark:text-slate-400 text-sm mb-6">${message}</p>
-                            <button id="closeFunPopup" class="px-8 py-3 ${isSecurity ? 'bg-red-500 hover:bg-red-600 shadow-red-200' : 'bg-purple-600 hover:bg-purple-700 shadow-purple-200'} text-white font-bold rounded-xl transition-all active:scale-95 shadow-lg dark:shadow-none">
-                                ${btnText}
-                            </button>
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(popup);
-                
-                const closeBtn = document.getElementById('closeFunPopup');
-                closeBtn.onclick = () => {
-                    popup.classList.add('animate-out', 'fade-out', 'zoom-out-95');
-                    setTimeout(() => popup.remove(), 200);
-                };
-            }
-
-            // Override global showPopup for app.js validation errors
-            window.showPopup = function(title, message) {
-                showFunPopup(title, message, translations[currentLang].emptyErrorBtn, false);
-            };
-
-            function unlock() {
-                document.getElementById('securityLockScreen').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-            }
-
-            function checkAuth() {
-                const tokenObj = JSON.parse(localStorage.getItem('app_auth_token') || 'null');
-                if (tokenObj && tokenObj.token === ACCESS_KEY_HASH && (Date.now() - tokenObj.timestamp < SESSION_DURATION)) {
-                    unlock();
-                }
-            }
-
-            const verifyBtn = document.getElementById('verifyKeyBtn');
-            const input = document.getElementById('accessKeyInput');
-
-            verifyBtn.onclick = () => {
-                let isMatch = false;
-                try {
-                    isMatch = (btoa(input.value) === ACCESS_KEY_HASH);
-                } catch (e) {
-                    isMatch = false;
-                }
-
-                if (isMatch) {
-                    localStorage.setItem('app_auth_token', JSON.stringify({ token: ACCESS_KEY_HASH, timestamp: Date.now() }));
-                    unlock();
-                } else {
-                    showFunPopup(translations[currentLang].securityTitle, translations[currentLang].invalidKey, translations[currentLang].invalidKeyBtn, true);
-                    input.value = '';
-                    input.focus();
-                }
-            };
-
-            input.onkeypress = (e) => { if (e.key === 'Enter') verifyBtn.click(); };
-
-            checkAuth();
-        })();
     </script>
     <script src='app.js'></script>
 </body>
