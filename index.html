@@ -148,11 +148,11 @@
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div class="space-y-1.5">
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="targetNetUSD">الصافي المستهدف (USD)</label>
-                                <input type="number" id="targetNetUSD" value="" step="10" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors no-spinner">
+                                <input type="text" id="targetNetUSD" value="" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors no-spinner">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300" data-i18n="usdRate">سعر الصرف (EGP/USD)</label>
-                                <input type="number" id="usdRate" value="" step="0.001" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors no-spinner">
+                                <input type="text" id="usdRate" value="" class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors no-spinner">
                             </div>
                         </div>
                         
@@ -223,6 +223,42 @@
     </div>
 
     <script src='translations.js'></script>
+    <script>
+        // Numeric Masking Helper
+        (function() {
+            const ids = ['targetNetUSD', 'usdRate'];
+            const format = v => v ? v.toString().split('.').map((p,i) => i === 0 ? p.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : p).join('.') : "";
+            const strip = v => v.toString().replace(/,/g, '');
+            
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                
+                el.addEventListener('input', (e) => {
+                    let cursor = el.selectionStart, oldLen = el.value.length;
+                    let raw = strip(el.value);
+                    if (isNaN(raw.replace('.', '')) && raw !== '') {
+                        el.value = format(strip(el.getAttribute('data-last-valid') || ''));
+                        return;
+                    }
+                    el.setAttribute('data-last-valid', raw);
+                    let formatted = format(raw);
+                    el.value = formatted;
+                    let diff = formatted.length - oldLen;
+                    el.setSelectionRange(cursor + diff, cursor + diff);
+                });
+
+                // Property interceptor for compatibility with app.js
+                const proto = HTMLInputElement.prototype;
+                const desc = Object.getOwnPropertyDescriptor(proto, 'value');
+                Object.defineProperty(el, 'value', {
+                    get: function() { return strip(desc.get.call(this)); },
+                    set: function(v) { desc.set.call(this, format(strip(v.toString()))); },
+                    configurable: true
+                });
+            });
+        })();
+    </script>
     <script src='app.js'></script>
 </body>
 </html>
